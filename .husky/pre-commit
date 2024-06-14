@@ -1,0 +1,12 @@
+# npm run check-format-staged ||
+# (
+#     echo '
+#             🤢🤮 CODES NOT FORMATTED COREECTLY 🤢🤮 
+#             Prettier / Eslint Check Failed. review codes and  try commiting again.
+#         ';
+#     false;
+# )
+
+# # If everything passes... Now we can commit
+# echo '✅ codes are formatted.'
+

@@ -1,0 +1,202 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    name: Build frontend🏗️
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          
+          npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+  frontend-test:
+    name: Testing frontend 🧪
+    needs: build-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          
+          npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+      - name: Run tests
+        run: |
+          
+          # npm test
+
+  production-build:
+    name: Build frontend for production🏗️
+    needs: [frontend-test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          
+          npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+  staging-build:
+    name: Build frontend for staging🏗️
+    needs: [frontend-test]
+    if: github.ref == 'refs/heads/frontend'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          
+          npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+  deploy-production:
+    name: Deploy Production 🚀
+    needs: [frontend-test, production-build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          rsync --version
+          
+           npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+      # - name: 📂 Sync files
+      #   uses: SamKirkland/web-deploy@v1
+      #   with:
+      #     target-server: ${{secrets.FTP_SERVER}}
+      #     remote-user: ${{secrets.FTP_USER}}
+      #     private-ssh-key: ${{ secrets.SSH_KEY }}
+      #     destination-path: /var/www/mindrisersconsultancy.com/
+      #     source-path: ./frontend/
+      - name: Sync Files
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{secrets.FTP_USER}}
+          server: ${{secrets.FTP_SERVER}}
+          password: ${{secrets.FTP_PASSWORD}}
+          port: 22
+          local_path: ".next/*"
+          remote_path: /var/www/html/himalayantea.com/frontend/himalayan-tea-frontend/.next/
+          sftp_only: true
+          
+      - name: image
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{secrets.FTP_USER}}
+          server: ${{secrets.FTP_SERVER}}
+          password: ${{secrets.FTP_PASSWORD}}
+          port: 22
+          local_path: "public/*"
+          remote_path: /var/www/html/himalayantea.com/frontend/himalayan-tea-frontend/public/
+          sftp_only: true
+
+
+  deploy-staging:
+    name: Deploy Staging 🚀
+    needs: [frontend-test, staging-build]
+    if: github.ref == 'refs/heads/frontend'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          
+          npm install
+
+      - name: Build App
+        run: |
+          
+          npm run build
+
+      # - name: 📂 Sync files
+      #   uses: SamKirkland/web-deploy@v1
+      #   with:
+      #     target-server: ${{secrets.FTP_SERVER}}
+      #     remote-user: ${{secrets.FTP_USER}}
+      #     private-ssh-key: ${{ secrets.SSH_KEY }}
+      #     destination-path: /var/www/mindrisersconsultancy.com/
+      #     source-path: ./frontend/
+      - name: Sync Files
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{secrets.FTP_USER}}
+          server: ${{secrets.FTP_SERVER}}
+          password: ${{secrets.FTP_PASSWORD}}
+          port: 22
+          local_path: ".next/*"
+          remote_path: /var/www/html/himalayantea.com/frontend/himalayan-tea-frontend/.next/
+          sftp_only: true
+      - name: Sync Files
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{secrets.FTP_USER}}
+          server: ${{secrets.FTP_SERVER}}
+          password: ${{secrets.FTP_PASSWORD}}
+          port: 22
+          local_path: "public/*"
+          remote_path: /var/www/html/himalayantea.com/frontend/himalayan-tea-frontend/public/
+          sftp_only: true
