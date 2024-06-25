@@ -14,7 +14,7 @@ const About = () => {
                 <FiPhone className='text-[20px]' />
                 <div>
                     <p> 0800 12345-678-89</p>
-                    <p>+4 1234-4567-67</p>
+                    <p>9876543210</p>
                 </div>
             </div>
 
