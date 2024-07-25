@@ -195,14 +195,14 @@ const Header = () => {
                                 <Link href='/wishlist' className='wishlist flex items-center'>
                                     <button
                                         type='button'
-                                        className='relative inline-flex items-center rounded-lg p-3 text-center text-sm font-medium focus:outline-none    '
+                                        className='relative inline-flex items-center rounded-lg p-2 text-center text-sm font-medium focus:outline-none    '
                                     >
                                         <CiHeart size={22} />
-                                        <div className='absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900'>
+                                        <div className='absolute -end-2 -top-2 inline-flex h-6 w-6 items-center justify-center rounded-full p-2 border-2 border-white bg-red-500 text-xs font-bold text-white dark:border-gray-900'>
                                             20
                                         </div>
                                     </button>
-                                    <span className=''>Wishlist</span>
+                                    <span className='p-2'>Wishlist</span>
                                 </Link>
                             </div>
                             <div>
@@ -219,7 +219,7 @@ const Header = () => {
                 {/* navbar  */}
                 <nav className=' border-gray-200 bg-[#77b748] dark:border-gray-700'>
                     <div
-                        className=' lflex-wrap  text-whi te mx-auto hidden h-[50px] max-w-screen-xl  items-center justify-center px-4
+                        className=' lflex-wrap  text-white mx-auto hidden h-[50px] max-w-screen-xl  items-center justify-center px-4
           lg:flex'
                     >
                         <div
